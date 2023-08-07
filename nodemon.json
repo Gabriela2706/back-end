@@ -1,0 +1,6 @@
+{
+  "verbose": true,
+  "ignore": ["db-mongo/**", ".git", "node_modules/**/node_modules"],
+  "legacyWatch": true,
+  "ext": "js"
+}

@@ -1,4 +1,13 @@
 {{! vista que se renderiza en ./api/views/chat }}
-
+<h1>CHAT</h1>
+<div>
+  <ul>
+    <li>Nombre: <input id="name" name="name" type="text" /> </li>
+    <li>Mensaje:
+      <textarea id="message" name="message" rows="10" cols="50"></textarea>
+    </li>
+  </ul>
+  <button type="button" id="enviarMensaje">Enviar Mensaje!</button>
+</div>
 <script src="/socket.io/socket.io.js"></script>
-<script src="/src/public/js/socketio.js"></script>
+<script src="/js/socketio.js"></script>

@@ -7,7 +7,7 @@ export default class ProductManager {
 
   //OBTENER TODOS LOS PRODUCTOS
   getProducts = async () => {
-    const allProducts = await ProductModel.find();
+    const allProducts = await ProductModel.find().lean();
     return allProducts;
   };
   //AGREGAR PRODUCTOS NUEVOS
@@ -27,10 +27,10 @@ export default class ProductManager {
       console.log(e);
     }
   };
-  //OBTENCION DE PRODUCTO POR ID (NO FUNCIONA, SIEMPRE TIRA EL MISMO ERROR: EL ID NO SE ENCUENTRA)
+  //OBTENCION DE PRODUCTO POR ID
 
   getProductById = async (id) => {
-    const findProduct = await ProductModel.findOne({ id: "_id" });
+    const findProduct = await ProductModel.findById(id);
     if (findProduct) {
       console.log(`Producto Encontrado!!`);
       return findProduct;
@@ -38,28 +38,27 @@ export default class ProductManager {
       return `El producto con id ${id} no se encuentra en nuestra lista`;
     }
   };
-  //CAMBIO DE ALGUN ELEMENTO EN EL PRODUCTO( NO FUNCIONA, INTENTE USAR EL UPDATEONE Y EL PUT SE GENERA BIEN, PERO NO HACE EL CAMBIO)
+  //CAMBIO DE ALGUN ELEMENTO EN EL PRODUCTO(NO FUNCIONA)
 
-  updateProducts = async (idUpdateProducts) => {
+  updateProducts = async (idUpdate) => {
     //Validacion para saber si el el producto con cierto ID esta en nuestra base
-    let productFound = ProductModel.findOne(idUpdateProducts);
+    let productFound = ProductModel.findOne(idUpdate);
+
     if (!productFound) {
-      return `El producto con id ${idUpdateProducts} no se encontro.`;
+      return `El producto con id ${idUpdate} no se encontro.`;
     }
-    let updateProducts = ProductModel.updateOne({ idUpdateProducts });
-    //uso updateone para cambiar algo del id recibido en el parametro. recibo el id y retorno el producto encontrado + el cambio del id.
-    return {
-      ...productFound,
-      ...updateProducts,
-    };
+    await ProductModel.findByIdAndUpdate(
+      { idUpdate: productFound._id },
+      productFound
+    );
+    return console.log("producto modificado");
   };
 
-  //ELIMINAR UN PRODUCTO DE LA LISTA
+  //ELIMINAR UN PRODUCTO DE LA LISTA ( NO FUNCIONA)
 
-  deleteProduct = async (idProductDelete) => {
-    const newListOfProducts = ProductModel.findOneAndRemove({
-      idProductDelete,
-    });
-    return newListOfProducts;
+  deleteProduct = async (id) => {
+    const newListOfProducts = await ProductModel.findByIdAndDelete({ id });
+    newListOfProducts.save();
+    return console.log("Producto eliminado");
   };
 }

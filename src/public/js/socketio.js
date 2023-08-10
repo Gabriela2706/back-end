@@ -1,5 +1,5 @@
 // * conexion socket(FRONT)
-console.log("hola front");
+
 const socketCliente = io();
 
 let subirInfo = document.getElementById("subirInfo");
@@ -19,4 +19,18 @@ subirInfo.addEventListener("click", () => {
   };
 
   socketCliente.emit("subirProductos", infoProducts);
+});
+
+let enviarMensaje = document.getElementById("enviarMensaje");
+
+enviarMensaje.addEventListener("click", () => {
+  const name = document.getElementById("name").value;
+  const message = document.getElementById("message").value;
+
+  chatHistory = {
+    name,
+    message,
+  };
+
+  socketCliente.emit("guardarChat", chatHistory);
 });

@@ -1,19 +1,18 @@
 {{! vista que se renderiza en ./api/views }}
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="/src/public/js/socketio.js"></script>
-
 <div> <h1>Productos en stock</h1></div>
 {{#each prod}}
   <div>
-    <ul
-    >{{! NO LOGRO QUE HANDLEBARS TOME LAS PROPIEDADES DEL PROD DE LA BASE DE DATOS DE MONGO. }}
-      <li>Nombre: {{this.title}} </li>
-      <li>Descripcion: {{this.description}} </li>
-      <li>Precio: {{this.price}} </li>
-      <li>Stock disponible: {{this.stock}} </li>
+    <ul>
+      <li>Nombre: {{title}} </li>
+      <li>Descripcion: {{description}} </li>
+      <li>Precio: {{price}} </li>
+      <li>Stock disponible: {{stock}} </li>
       <li></li>
     </ul>
   </div>
 
 {{/each}}
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/socketio.js"></script>

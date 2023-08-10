@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const chatSchema = new mongoose.Schema({
   user: {
-    type: string,
+    type: String,
     require: true,
   },
   message: {

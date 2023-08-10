@@ -12,12 +12,12 @@ export default class CartManager {
   //CREAR CARRITO DE PRODUCTOS
   //
   createCart = async (cart) => {
-    const carts = await CartModel.insertMany([cart]);
+    const carts = await CartModel.create([cart]);
     return carts;
   };
   // obtener carrito por id (funciona)
   getCartById = async (idCart) => {
-    const findCart = await CartModel.find((cart) => cart.id == idCart);
+    const findCart = await CartModel.findById(idCart);
     if (findCart) {
       return findCart;
     } else {
@@ -25,7 +25,7 @@ export default class CartManager {
     }
   };
 
-  // agregar un producto al carrito de compras
+  // agregar un producto al carrito de compras (ESTO LO VOY A HACER CON POPULATE)
   addProductToCart = async (cidCart, pidProduct) => {
     if (!cidCart) return "Cart  Not Found";
     if (!pidProduct) return "Product Not Found";

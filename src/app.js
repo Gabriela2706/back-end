@@ -8,6 +8,7 @@ import routerProducts from "./routes/productRoute.js";
 import routerCart from "./routes/cartRoute.js";
 import ProductModel from "./schemas/productSchema.js";
 import routerViews from "./routes/productViewsRouter.js";
+import ChatModel from "./schemas/chatSchema.js";
 
 const app = express();
 
@@ -52,12 +53,16 @@ const appServer = app.listen(8082, () => {
 const io = new SocketServer(appServer);
 
 // conexion con el cliente
-
 io.on("connection", async (SocketServer) => {
   console.log(`Cliente con id: ${SocketServer.id} se ha conectado`);
 
   SocketServer.on("subirProductos", async (data) => {
     console.log(data);
-    await ProductModel.addProducts(data);
+    await ProductModel.create(data);
+  });
+
+  SocketServer.on("guardarChat", async (chat) => {
+    console.log(chat);
+    await ChatModel.create(chat);
   });
 });

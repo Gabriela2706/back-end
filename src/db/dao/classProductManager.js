@@ -27,7 +27,7 @@ export default class ProductManager {
       console.log(e);
     }
   };
-  //OBTENCION DE PRODUCTO POR ID
+  //OBTENCION DE PRODUCTO POR ID (FUNCIONA)
 
   getProductById = async (id) => {
     const findProduct = await ProductModel.findById(id);
@@ -38,27 +38,23 @@ export default class ProductManager {
       return `El producto con id ${id} no se encuentra en nuestra lista`;
     }
   };
-  //CAMBIO DE ALGUN ELEMENTO EN EL PRODUCTO(NO FUNCIONA)
+  //CAMBIO DE ALGUN ELEMENTO EN EL PRODUCTO(FUNCIONA)
 
-  updateProducts = async (idUpdate) => {
+  updateProducts = async (idUpdate, product) => {
     //Validacion para saber si el el producto con cierto ID esta en nuestra base
-    let productFound = ProductModel.findOne(idUpdate);
+    let productFound = await ProductModel.findOne({ _id: idUpdate });
 
     if (!productFound) {
       return `El producto con id ${idUpdate} no se encontro.`;
     }
-    await ProductModel.findByIdAndUpdate(
-      { idUpdate: productFound._id },
-      productFound
-    );
+    await ProductModel.findByIdAndUpdate({ _id: productFound._id }, product);
     return console.log("producto modificado");
   };
 
-  //ELIMINAR UN PRODUCTO DE LA LISTA ( NO FUNCIONA)
+  //ELIMINAR UN PRODUCTO DE LA LISTA (FUNCIONA)
 
   deleteProduct = async (id) => {
-    const newListOfProducts = await ProductModel.findByIdAndDelete({ id });
-    newListOfProducts.save();
+    const newListOfProducts = await ProductModel.findByIdAndDelete({ _id: id });
     return console.log("Producto eliminado");
   };
 }

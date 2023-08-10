@@ -38,8 +38,8 @@ routerProducts.put("/:id", async (req, res) => {
 
 // Elimina un producto de la base de datos (NO FUNCIONA)
 routerProducts.delete("/:id", async (req, res) => {
-  const { _id } = req.params;
-  let product = await manager.deleteProduct(_id);
+  const { id } = req.params;
+  let product = await manager.deleteProduct(id);
 
   res.send(product);
 });

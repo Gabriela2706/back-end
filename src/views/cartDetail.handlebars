@@ -1,0 +1,17 @@
+{{! Se renderiza en ./api/views/carts/:cid }}
+
+<div> <h1>Detalle del carrito</h1></div>
+
+<div>
+
+  <ul>
+    <li>Usurio: {{user}} </li>
+    <li>ID del carrito: {{_id}} </li>
+    <li>Productos del carrito: {{products}} </li>
+
+  </ul>
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/socketio.js"></script>

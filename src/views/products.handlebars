@@ -1,0 +1,19 @@
+{{! Se renderiza en ./api/views/products }}
+
+<div> <h1>Detalle de productos</h1></div>
+{{#each prod}}
+  <div>
+    <ul>
+      <li>Nombre: {{title}} </li>
+      <li>Descripcion: {{description}} </li>
+      <li>Precio: {{price}} </li>
+      <li>Stock disponible: {{stock}} </li>
+      <Button type="button" onclick="agregarProductos()" id="agregar">Agregar al
+        carrito</Button>
+    </ul>
+  </div>
+
+{{/each}}
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/socketio.js"></script>

@@ -32,7 +32,6 @@ export default class ProductManager {
   getProductById = async (id) => {
     const findProduct = await ProductModel.findById(id);
     if (findProduct) {
-      console.log(`Producto Encontrado!!`);
       return findProduct;
     } else {
       return `El producto con id ${id} no se encuentra en nuestra lista`;

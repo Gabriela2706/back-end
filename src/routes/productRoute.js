@@ -1,12 +1,13 @@
 import { Router } from "express";
 import ProductManager from "../db/dao/classProductManager.js";
+
 const routerProducts = Router();
 const manager = new ProductManager();
 
 //devuelve una nueva lista recortada dependiendo la cantidad que que pongas en cantidad (FUNCIONA)
 routerProducts.get("/", async (req, res) => {
-  const { cantidad } = req.query;
-  let products = await manager.getProducts();
+  const { cantidad, page = 1, limit = 10, query = {} } = req.query;
+  let products = await manager.paginate(query, limit, page);
   if (cantidad) products = products.slice(0, +cantidad);
   res.send(products);
 });

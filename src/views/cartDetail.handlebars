@@ -5,9 +5,16 @@
 <div>
 
   <ul>
-    <li>Usurio: {{user}} </li>
-    <li>ID del carrito: {{_id}} </li>
-    <li>Productos del carrito: {{products}} </li>
+    <li>Usurio: {{oneCart.user}} </li>
+    <li>ID del carrito: {{oneCart._id}} </li>
+    <ul>Productos del carrito:
+      {{#each oneCart.products}}
+        <li>ID del producto: {{_id}}</li>
+        <li>Nombre: {{title}}</li>
+        <li>Descripcion: {{description}}</li>
+        <li>Precio: {{price}}</li>
+      {{/each}}
+    </ul>
 
   </ul>
 

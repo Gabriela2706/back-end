@@ -11,7 +11,7 @@ routerCart.get("/", async (req, res) => {
   res.send(allCarts);
 });
 
-//crea un nuevo carrito (FUNCIONA)
+//crea un nuevo carrito (NO FUNCIONA, NO LEE EL CODE Y VALIDA COMO SI YA EXISTIERA)
 routerCart.post("/", async (req, res) => {
   const body = req.body;
   const newCart = await managerCart.createCart(body);
@@ -35,7 +35,7 @@ routerCart.post("/:cid/product/:pid", async (req, res) => {
   res.send(addproducts);
 });
 
-//Eliminar un producto de un carrito (borra todos los productos del carrito)
+//Eliminar un producto de un carrito (FUNCIONA)
 routerCart.delete("/:cid/product/:pid", async (req, res) => {
   const { cid, pid } = req.params;
   const deleteFromCart = await managerCart.deletePidOfCid(

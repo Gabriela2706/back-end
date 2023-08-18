@@ -15,9 +15,9 @@ export default class ProductManager {
   addProducts = async (code) => {
     try {
       // validacion: busca si el producto nuevo tiene un code ya existente
-      const validation = ProductModel.findOne({ code });
+      const validation = await ProductModel.findOne({ code });
       if (validation) {
-        console.log("Producto con codigo ya existente");
+        console.log(`Producto con codigo ya existente ${code}`);
         return;
       }
 

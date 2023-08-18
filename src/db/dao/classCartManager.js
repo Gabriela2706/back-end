@@ -19,7 +19,7 @@ export default class CartManager {
   };
   // obtener carrito por id (funciona)
   getCartById = async (idCart) => {
-    const findCart = await cartModel.findById(idCart);
+    const findCart = await cartModel.findById(idCart).lean();
     if (findCart) {
       return findCart;
     } else {
@@ -27,7 +27,7 @@ export default class CartManager {
     }
   };
 
-  // agregar un producto a un carrito de compras (funciona)
+  // agregar un producto a un carrito de compras (NO FUNCIONA, NO RECONOCE idCart.products.push)
   addProductToCart = async (cidCart, pidProduct) => {
     if (!cidCart) return "Cart  Not Found";
     if (!pidProduct) return "Product Not Found";
@@ -38,15 +38,15 @@ export default class CartManager {
     idCart.save();
   };
 
-  // Eliminar un producto de un carrito de compras (No funciona, elimina todo el carrito)
+  // Eliminar un producto de un carrito de compras (FUNCIONA)
   deletePidOfCid = async (cidCart, pidProduct) => {
     if (!cidCart) return "Cart  Not Found";
     if (!pidProduct) return "Product Not Found";
-    let idCart = await cartModel.findOne(cidCart);
-    let idProduct = await ProductModel.findOne(pidProduct);
-
-    idCart.products.splice({ product: idProduct }); // no estoy segura de que opcion va, probe varias
-    idCart.save();
+    return await cartModel.findOneAndUpdate(
+      { _id: cidCart.id },
+      { $pull: { products: { _id: pidProduct._id } } },
+      { new: true }
+    );
   };
 
   //Eliminar todos los productos del carrito (No funciona, Me tira una infinidad de errores por consola)
@@ -73,12 +73,12 @@ export default class CartManager {
     await cartModel.findByIdAndUpdate({ _id: idCart.id }, idCart);
   };
 
-  // muestra solo el carrito con sus respectivos productos (Funciona, pero el populate no)
+  // muestra solo el carrito con sus respectivos productos (Funciona)
   cartDetail = async (cidCart) => {
     if (!cidCart) return "Cart  Not Found";
     let cartDetail = await cartModel
       .findOne(cidCart)
-      .populate("products.product"); //puse el populate aca y no funciona
-    console.log(JSON.stringify(cartDetail, null, "\t")); // aca ni siquiera me muestra la informacion
+      .populate("products.product");
+    console.log(JSON.stringify(cartDetail, null, "\t"));
   };
 }

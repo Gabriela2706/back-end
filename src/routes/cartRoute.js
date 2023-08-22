@@ -11,7 +11,7 @@ routerCart.get("/", async (req, res) => {
   res.send(allCarts);
 });
 
-//crea un nuevo carrito (NO FUNCIONA, NO LEE EL CODE Y VALIDA COMO SI YA EXISTIERA)
+//crea un nuevo carrito (FUNCIONA)
 routerCart.post("/", async (req, res) => {
   const body = req.body;
   const newCart = await managerCart.createCart(body);
@@ -25,7 +25,7 @@ routerCart.get("/:id", async (req, res) => {
   res.send(cart);
 });
 
-//agrega el producto al array “products” del carrito seleccionado (FUNCIONA)
+//agrega el producto al array “products” del carrito seleccionado (NO FUNCIONA)
 routerCart.post("/:cid/product/:pid", async (req, res) => {
   const { cid, pid } = req.params;
   const addproducts = await managerCart.addProductToCart(
@@ -35,7 +35,7 @@ routerCart.post("/:cid/product/:pid", async (req, res) => {
   res.send(addproducts);
 });
 
-//Eliminar un producto de un carrito (FUNCIONA)
+//Eliminar un producto de un carrito (No FUNCIONA, tampoco tira error)
 routerCart.delete("/:cid/product/:pid", async (req, res) => {
   const { cid, pid } = req.params;
   const deleteFromCart = await managerCart.deletePidOfCid(
@@ -45,10 +45,10 @@ routerCart.delete("/:cid/product/:pid", async (req, res) => {
   res.send(deleteFromCart);
 });
 
-//Eliminar un producto de un carrito (no funciona)
+//Eliminar un carrito (no funciona)
 routerCart.delete("/:cid", async (req, res) => {
   const { cid } = req.params;
-  const deleteCart = await managerCart.deleteCart({ cid });
+  const deleteCart = await managerCart.deleteCart(cid);
   res.send(deleteCart);
 });
 
@@ -63,7 +63,8 @@ routerCart.put("/:cid/product/:pid", async (req, res) => {
   });
   res.send(changeQuantity);
 });
-//muestra el carrito con los productos y su detalle (Populate)(No funciona el populate)
+
+//muestra el carrito con los productos y su detalle (no funciona el populate)
 routerCart.get("/:cid", async (req, res) => {
   const { cid } = req.params;
   const cartProducts = await managerCart.cartDetail(cid);

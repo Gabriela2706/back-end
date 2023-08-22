@@ -6,13 +6,13 @@ export default class CartManager {
     this.cart = [];
   }
 
-  // OBTENER CARRITO DE PRODUCTOS
+  // OBTENER CARRITO DE PRODUCTOS (funciona y el populate tambien)
   getCart = async () => {
     const allCarts = await cartModel.find();
     console.log(JSON.stringify(allCarts, null, "\t"));
     return allCarts;
   };
-  //CREAR CARRITO DE PRODUCTOS
+  //CREAR CARRITO DE PRODUCTOS (funciona)
   createCart = async (cart) => {
     const carts = await cartModel.create(cart);
     return carts;
@@ -27,18 +27,18 @@ export default class CartManager {
     }
   };
 
-  // agregar un producto a un carrito de compras (NO FUNCIONA, NO RECONOCE idCart.products.push)
+  // agregar un producto a un carrito de compras (No funciona)
   addProductToCart = async (cidCart, pidProduct) => {
     if (!cidCart) return "Cart  Not Found";
     if (!pidProduct) return "Product Not Found";
-    let idCart = await cartModel.findOne(cidCart);
+    let idCart = await cartModel.findOne(cidCart); //ObjectParameterError: Parameter "filter" to findOne() must be an object, got "El carrito con id 64e510c9648b156741923a19 no se genero aun" (type string)
     let idProduct = await ProductModel.findOne(pidProduct);
 
     idCart.products.push({ product: idProduct });
     idCart.save();
   };
 
-  // Eliminar un producto de un carrito de compras (FUNCIONA)
+  // Eliminar un producto de un carrito de compras (no FUNCIONA, no hace nada)
   deletePidOfCid = async (cidCart, pidProduct) => {
     if (!cidCart) return "Cart  Not Found";
     if (!pidProduct) return "Product Not Found";
@@ -76,9 +76,7 @@ export default class CartManager {
   // muestra solo el carrito con sus respectivos productos (Funciona)
   cartDetail = async (cidCart) => {
     if (!cidCart) return "Cart  Not Found";
-    let cartDetail = await cartModel
-      .findOne(cidCart)
-      .populate("products.product");
+    let cartDetail = await cartModel.find(cidCart);
     console.log(JSON.stringify(cartDetail, null, "\t"));
   };
 }

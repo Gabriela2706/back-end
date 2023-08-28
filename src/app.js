@@ -9,8 +9,14 @@ import routerCart from "./routes/cartRoute.js";
 import ProductModel from "./schemas/productSchema.js";
 import routerViews from "./routes/productViewsRouter.js";
 import ChatModel from "./schemas/chatSchema.js";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import sessionFs from "session-file-store";
+import routerUser from "./routes/userViewsRoute.js";
+import MongoStore from "connect-mongo";
 
 const app = express();
+const FS = sessionFs(session);
 
 //conexion con moongose atlas
 const connMongoose = await mongoose.connect(
@@ -25,24 +31,28 @@ app.set("view engine", "handlebars"); // aca le digo cual es el motor que se va 
 //-------- USO DE MIDDLWARES ------
 app.use(express.urlencoded({ extended: true })); //Esto me sirve para req.query para transformar el texto plano a objeto
 app.use(express.json());
+app.use(cookieParser());
+app.use(
+  session({
+    secret: "159632PS",
+    resave: true,
+    saveUninitialized: true,
+
+    store: new MongoStore({
+      mongoUrl: `mongodb+srv://gabrielat0087:kD3MRROQUggHUPNE@clusterback0.p20zhu3.mongodb.net/ecommerce`,
+      ttl: 120,
+    }),
+  })
+);
 
 //---------- ABREVIACION DE RUTAS PARA USO DE EXPRESS ---------------
 app.use("/api/cart", routerCart);
 app.use("/api/products", routerProducts);
 app.use("/api/views", routerViews);
+app.use("/api/users", routerUser);
 
 //---------- CONTENIDO ESTATICO ---------------------------
 app.use(express.static(`${__dirname}/public`));
-
-app.post("/api/products/mong", async (req, res) => {
-  try {
-    const body = req.body;
-    const newProduct = await ProductModel.insertMany([body]);
-    res.send(newProduct);
-  } catch (err) {
-    res.status(502).send({ error: true });
-  }
-});
 
 // inicializacion de express
 const appServer = app.listen(8082, () => {

@@ -17,66 +17,59 @@ export default class CartManager {
     const carts = await cartModel.create(cart);
     return carts;
   };
-  // obtener carrito por id (funciona)
-  getCartById = async (idCart) => {
-    const findCart = await cartModel.findById(idCart).lean();
-    if (findCart) {
-      return findCart;
-    } else {
-      return `El carrito con id ${idCart} no se genero aun`;
-    }
+
+  // muestra solo el carrito con sus respectivos productos (Funciona)
+  cartDetail = async (cidCart) => {
+    if (!cidCart) return "Cart  Not Found";
+    let cartDetail = await cartModel.findOne({ _id: cidCart });
+
+    console.log(JSON.stringify(cartDetail, null, "\t"));
   };
 
-  // agregar un producto a un carrito de compras (No funciona)
+  // agregar un producto a un carrito de compras (funciona)
   addProductToCart = async (cidCart, pidProduct) => {
     if (!cidCart) return "Cart  Not Found";
     if (!pidProduct) return "Product Not Found";
-    let idCart = await cartModel.findOne(cidCart); //ObjectParameterError: Parameter "filter" to findOne() must be an object, got "El carrito con id 64e510c9648b156741923a19 no se genero aun" (type string)
-    let idProduct = await ProductModel.findOne(pidProduct);
+    let idCart = await cartModel.findById(cidCart);
+    let idProduct = await ProductModel.findById(pidProduct);
 
     idCart.products.push({ product: idProduct });
     idCart.save();
   };
 
-  // Eliminar un producto de un carrito de compras (no FUNCIONA, no hace nada)
+  // Eliminar un producto de un carrito de compras (funciona)
   deletePidOfCid = async (cidCart, pidProduct) => {
     if (!cidCart) return "Cart  Not Found";
     if (!pidProduct) return "Product Not Found";
     return await cartModel.findOneAndUpdate(
-      { _id: cidCart.id },
-      { $pull: { products: { _id: pidProduct._id } } },
+      { _id: cidCart },
+      { $pull: { products: { product: pidProduct } } },
       { new: true }
     );
   };
 
-  //Eliminar todos los productos del carrito (No funciona, Me tira una infinidad de errores por consola)
+  //Eliminar todos los productos del carrito (Funciona)
   deleteCart = async (cidCart) => {
     if (!cidCart) return "Cart  Not Found"; //Valido si existe el carrito
-
-    // busco por Id y elimino, le paso por parametro la indicacion de que el _id sea : al cidCart
-    let idCartDelete = await cartModel.findByIdAndDelete({ _id: cidCart });
-
-    idCartDelete.save(); //Guardo los cambios
+    // busco por Id y elimino lo que contiene el carrito, es decir, lo dejo en 0
+    let idCartDelete = await cartModel.findById(cidCart);
+    idCartDelete.products = [];
+    await idCartDelete.save();
+    return console.log("Carrito vaciado");
   };
 
-  //Actualizar cantidad del producto dentro de un carrito (no funciona)
+  //Actualizar cantidad del producto dentro de un carrito (NO FUNCIONA)
   updateProdQuantity = async (cidCart, pidProduct, quantity) => {
     if (!cidCart) return "Cart  Not Found";
-    if (!pidProduct) return "Product Not Found";
-    let idCart = await cartModel.findOne(cidCart);
-    let idProduct = await ProductModel.findOne(pidProduct);
-
+    const product = await ProductModel.findOne({ _id: pidProduct });
     // Si existe el id del producto en ese carrito, le pusheo cantidad pasada por el req.body
-    if (idProduct) return idCart.products.push({ quantity });
-    //Guardo este cambio. Tengo la sospecha que deberia referenciar el id de product, pero no se como hacerlo
+    if (!product) return `El producto no existe`;
+    cartModel.findOneAndUpdate(
+      { _id: cidCart },
+      { $push: { products: { quantity: quantity } } },
+      { new: true }
+    );
 
-    await cartModel.findByIdAndUpdate({ _id: idCart.id }, idCart);
-  };
-
-  // muestra solo el carrito con sus respectivos productos (Funciona)
-  cartDetail = async (cidCart) => {
-    if (!cidCart) return "Cart  Not Found";
-    let cartDetail = await cartModel.find(cidCart);
-    console.log(JSON.stringify(cartDetail, null, "\t"));
+    return console.log("cambio realizado");
   };
 }

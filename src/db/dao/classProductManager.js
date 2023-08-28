@@ -7,21 +7,22 @@ export default class ProductManager {
 
   //OBTENER TODOS LOS PRODUCTOS
   getProducts = async () => {
-    const allProducts = await ProductModel.find().lean(); //Aca deberia ir el paginate?
+    const allProducts = await ProductModel.paginate();
     return allProducts;
   };
-  //AGREGAR PRODUCTOS NUEVOS
 
-  addProducts = async (code) => {
+  //AGREGAR PRODUCTOS NUEVOS
+  addProducts = async (codeProducts) => {
+    const { code } = codeProducts;
     try {
       // validacion: busca si el producto nuevo tiene un code ya existente
-      const validation = await ProductModel.findOne({ code });
+      const validation = await ProductModel.findOne({ code: code });
       if (validation) {
         console.log(`Producto con codigo ya existente ${code}`);
         return;
       }
 
-      const newProduct = await ProductModel.insertMany([prod]);
+      const newProduct = await ProductModel.insertMany([codeProducts]);
       return newProduct;
     } catch (e) {
       console.log(e);

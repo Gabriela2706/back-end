@@ -18,57 +18,45 @@ routerCart.post("/", async (req, res) => {
   res.send(console.log(newCart));
 });
 
-//obtiene carrito por id (FUNCIONA)
-routerCart.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  const cart = await managerCart.getCartById(id);
-  res.send(cart);
-});
-
-//agrega el producto al array “products” del carrito seleccionado (NO FUNCIONA)
-routerCart.post("/:cid/product/:pid", async (req, res) => {
-  const { cid, pid } = req.params;
-  const addproducts = await managerCart.addProductToCart(
-    await managerCart.getCartById(cid),
-    await managerProduct.getProductById(pid)
-  );
-  res.send(addproducts);
-});
-
-//Eliminar un producto de un carrito (No FUNCIONA, tampoco tira error)
-routerCart.delete("/:cid/product/:pid", async (req, res) => {
-  const { cid, pid } = req.params;
-  const deleteFromCart = await managerCart.deletePidOfCid(
-    await managerCart.getCartById(cid),
-    await managerProduct.getProductById(pid)
-  );
-  res.send(deleteFromCart);
-});
-
-//Eliminar un carrito (no funciona)
-routerCart.delete("/:cid", async (req, res) => {
-  const { cid } = req.params;
-  const deleteCart = await managerCart.deleteCart(cid);
-  res.send(deleteCart);
-});
-
-//actualiza la cantidad del producto agregado dentro del carrito (Me dice "Product not Found")
-routerCart.put("/:cid/product/:pid", async (req, res) => {
-  const { cid, pid } = req.params;
-  const quantity = req.body;
-  const changeQuantity = await managerCart.updateProdQuantity({
-    cid,
-    pid,
-    quantity,
-  });
-  res.send(changeQuantity);
-});
-
-//muestra el carrito con los productos y su detalle (no funciona el populate)
+//muestra el carrito con los productos y su detalle (Funciona)
 routerCart.get("/:cid", async (req, res) => {
   const { cid } = req.params;
   const cartProducts = await managerCart.cartDetail(cid);
 
   res.send(cartProducts);
 });
+
+//agrega el producto al array “products” del carrito seleccionado (FUNCIONA)
+routerCart.post("/:cid/product/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
+  const addproducts = await managerCart.addProductToCart(cid, pid);
+  res.send(addproducts);
+});
+
+//Eliminar un producto de un carrito (Funciona)
+routerCart.delete("/:cid/product/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
+  const deleteFromCart = await managerCart.deletePidOfCid(cid, pid);
+  res.send(deleteFromCart);
+});
+
+//Eliminar Los productos de un carrito (Funciona)
+routerCart.delete("/:cid", async (req, res) => {
+  const { cid } = req.params;
+  const deleteCart = await managerCart.deleteCart(cid);
+  res.send(deleteCart);
+});
+
+//actualiza la cantidad del producto agregado dentro del carrito (NO FUNCIONA)
+routerCart.put("/:cid/product/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
+  const { quantity } = req.body;
+  const changeQuantity = await managerCart.updateProdQuantity(
+    cid,
+    pid,
+    quantity
+  );
+  res.send(changeQuantity);
+});
+
 export default routerCart;

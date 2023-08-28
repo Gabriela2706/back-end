@@ -3,10 +3,16 @@ import ProductManager from "../db/dao/classProductManager.js";
 const routerProducts = Router();
 const manager = new ProductManager();
 
+//obtener productos con paginacion (Funciona)
 routerProducts.get("/", async (req, res) => {
-  const { cantidad, page = 1, limit = 10, query = {}, sort = 1 } = req.query;
-  let products = await manager.getProducts(cantidad, page, limit, sort, query); //Aca intente poner el paginate y no pude
-  if (cantidad) products = products.slice(0, +cantidad);
+  const { page = 1, limit = 10, query = {}, sort = 1 } = req.query;
+  let products = await manager.getProducts({
+    page,
+    limit,
+    sort,
+    query,
+  });
+
   res.send(products);
 });
 //obtiene productos por id (FUNCIONA)
@@ -27,7 +33,7 @@ routerProducts.post("/", async (req, res) => {
   }
 });
 
-// cambia algun dato de un producto, sin modificar el ID (REVISAR Y VER SI AGREGO EL SAVE() O EL FINDIDANDUPDATE)
+// cambia algun dato de un producto, sin modificar el ID (FUNCIONA)
 routerProducts.put("/:id", async (req, res) => {
   const { id } = req.params;
   let product = req.body;
@@ -35,7 +41,7 @@ routerProducts.put("/:id", async (req, res) => {
   res.send({ update: true });
 });
 
-// Elimina un producto de la base de datos (NO FUNCIONA)
+// Elimina un producto de la base de datos (FUNCIONA)
 routerProducts.delete("/:id", async (req, res) => {
   const { id } = req.params;
   let product = await manager.deleteProduct(id);

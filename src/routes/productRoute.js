@@ -5,12 +5,12 @@ const manager = new ProductManager();
 
 //obtener productos con paginacion (Funciona)
 routerProducts.get("/", async (req, res) => {
-  const { page = 1, limit = 10, query = {}, sort = 1 } = req.query;
-  let products = await manager.getProducts({
-    page,
-    limit,
-    sort,
-    query,
+  const { limit = 3, page = 1, sort = 1, ...query } = req.query;
+  let products = await manager.getProducts(query, {
+    limit: limit,
+    lean: true,
+    page: page,
+    sort: { price: +sort },
   });
 
   res.send(products);

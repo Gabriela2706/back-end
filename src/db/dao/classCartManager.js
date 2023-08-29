@@ -62,14 +62,16 @@ export default class CartManager {
   updateProdQuantity = async (cidCart, pidProduct, quantity) => {
     if (!cidCart) return "Cart  Not Found";
     const product = await ProductModel.findOne({ _id: pidProduct });
-    // Si existe el id del producto en ese carrito, le pusheo cantidad pasada por el req.body
     if (!product) return `El producto no existe`;
-    cartModel.findOneAndUpdate(
-      { _id: cidCart },
-      { $push: { products: { quantity: quantity } } },
-      { new: true }
-    );
+    let cart = await cartModel.findById(cidCart);
+    cart.products.map((p) => {
+      if (p.product._id == pidProduct) {
+        p.quantity = quantity;
+      }
+      return p;
+    });
 
+    cart.save();
     return console.log("cambio realizado");
   };
 }

@@ -48,8 +48,9 @@ app.use(
 //---------- ABREVIACION DE RUTAS PARA USO DE EXPRESS ---------------
 app.use("/api/cart", routerCart);
 app.use("/api/products", routerProducts);
-app.use("/api/views", routerViews);
-app.use("/api/users", routerUser);
+app.use("/api/views", routerViews); //ProductViewsRoute
+app.use("/api/viewsUser", routerUser); //UserViewsRoute
+app.use("/api/user", routerUser);
 
 //---------- CONTENIDO ESTATICO ---------------------------
 app.use(express.static(`${__dirname}/public`));

@@ -1,12 +1,13 @@
 import { Router } from "express";
 import ProductManager from "../db/dao/classProductManager.js";
+import ProductModel from "../schemas/productSchema.js";
 const routerProducts = Router();
 const manager = new ProductManager();
 
 //obtener productos con paginacion (Funciona)
 routerProducts.get("/", async (req, res) => {
   const { limit = 3, page = 1, sort = 1, ...query } = req.query;
-  let products = await manager.getProducts(query, {
+  let products = await ProductModel.paginate(query, {
     limit: limit,
     lean: true,
     page: page,

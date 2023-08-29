@@ -58,7 +58,7 @@ export default class CartManager {
     return console.log("Carrito vaciado");
   };
 
-  //Actualizar cantidad del producto dentro de un carrito (NO FUNCIONA)
+  //Actualizar cantidad del producto dentro de un carrito (FUNCIONA)
   updateProdQuantity = async (cidCart, pidProduct, quantity) => {
     if (!cidCart) return "Cart  Not Found";
     const product = await ProductModel.findOne({ _id: pidProduct });

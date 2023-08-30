@@ -1,4 +1,6 @@
 import crypto from "crypto";
+import userModel from "../../schemas/userSchema.js";
+
 export default class UserManager {
   constructor() {}
 
@@ -18,9 +20,9 @@ export default class UserManager {
     return userCreate;
   };
   //VALIDAR USUARIO NUEVO
-  validateUser = async (username, password) => {
-    const user = await userModel.findOne({ username });
-    if (!user) return console.log("Usuario Invalido");
+  validateUser = async (userName, password) => {
+    const user = await userModel.findOne({ userName });
+    if (!user) return false;
     const newLogin = crypto
       .createHmac("sha256", user.salt)
       .update(password)

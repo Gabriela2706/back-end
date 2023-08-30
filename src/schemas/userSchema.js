@@ -4,11 +4,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  lastName: {
+  lastname: {
     type: String,
     require: true,
   },
-  userName: {
+  username: {
     type: String,
     require: true,
   },
@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ["admin", "user", "visit"],
     default: "visit",
+  },
+  salt: {
+    type: String,
+    require: true,
   },
 });
 

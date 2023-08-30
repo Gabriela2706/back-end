@@ -7,7 +7,7 @@ export default class ProductManager {
 
   //OBTENER TODOS LOS PRODUCTOS
   getProducts = async () => {
-    const allProducts = await ProductModel.paginate();
+    const allProducts = await ProductModel.find();
     return allProducts;
   };
 

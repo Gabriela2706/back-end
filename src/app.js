@@ -40,8 +40,9 @@ app.use(
 
     store: new MongoStore({
       mongoUrl: `mongodb+srv://gabrielat0087:kD3MRROQUggHUPNE@clusterback0.p20zhu3.mongodb.net/ecommerce`,
-      ttl: 120,
+      ttl: 3000,
     }),
+    ttl: 3000,
   })
 );
 

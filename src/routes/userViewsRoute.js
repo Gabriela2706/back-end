@@ -2,13 +2,11 @@
 
 import { Router } from "express";
 import UserManager from "../db/dao/classUserManager.js";
+import ProductManager from "../db/dao/classProductManager.js";
 const userM = new UserManager();
 const routerUserViews = Router();
+const managerProd = new ProductManager();
 
-//MUESTRA TODOS LOS USUARIOS
-routerUserViews.get("/", async (req, res) => {
-  res.render("users");
-});
 //MUESTRA EL LOGIN
 routerUserViews.get("/login", (req, res) => {
   res.render("login");
@@ -26,16 +24,31 @@ routerUserViews.post("/login", async (req, res) => {
   res.redirect("profile");
 });
 
-//FORMULARIO DE REGISTRO
+//MUESTRA EL FORMULARIO DE REGISTRO
 routerUserViews.get("/register", async (req, res) => {
+  res.render(`register`);
+});
+
+//OBTIENE EL REGISTRO
+routerUserViews.post("/register", async (req, res) => {
   const body = req.body;
   const newUser = await userM.addUser(body);
-  res.send(newUser);
+  if (!newUser) return "Faltan datos en el registro";
+  req.session.user = newUser;
 });
 
 //VISTA DE PERFIL
-routerUserViews.get("/profile", (req, res) => {
-  const { nombre, apellido, username } = req.session.user;
-  res.render("profile", { nombre, apellido, username });
+routerUserViews.get("/profile", async (req, res) => {
+  const { name, lastname } = req.session.user;
+  let products = await managerProd.getProducts();
+  res.render(`home`, { name, lastname, prod: products });
 });
+
+//LOGOUT
+routerUserViews.get("/logout", (req, res) => {
+  req.session.destroy((e) => {
+    res.render(`logout`);
+  });
+});
+
 export default routerUserViews;

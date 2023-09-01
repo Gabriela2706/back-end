@@ -14,6 +14,8 @@ import session from "express-session";
 import sessionFs from "session-file-store";
 import routerUser from "./routes/userViewsRoute.js";
 import MongoStore from "connect-mongo";
+import userModel from "./schemas/userSchema.js";
+import crypto from "crypto";
 
 const app = express();
 const FS = sessionFs(session);
@@ -76,5 +78,20 @@ io.on("connection", async (SocketServer) => {
   SocketServer.on("guardarChat", async (chat) => {
     console.log(chat);
     await ChatModel.create(chat);
+  });
+
+  SocketServer.on("registrarusuario", async (user) => {
+    console.log(user);
+
+    user.role = user.email == "admincoder@coder.com" ? "admin" : "visit"; // Si el email es el "admin..." el role sera admin, si no, sera visit o cualquiera
+    user.salt = crypto.randomBytes(128).toString("base64");
+    user.password = crypto
+      .createHmac("sha256", user.salt)
+      .update(user.password)
+      .digest("hex");
+
+    await userModel.create(user);
+
+    return user;
   });
 });

@@ -1,6 +1,29 @@
-{{! vista que se renderiza en /api/viewsUser/register}}
-<h1>registro del usuario</h1>
-<div><h1>Aca va a ir un formulario de registro</h1></div>
+<div class="container-sm">
+  <h1>Registro del usuario</h1>
+  <div class="col-4">
+    <label>Name</label>
+    <input type="text" id="name" name="name" />
+  </div>
+  <div class="col-4">
+    <label>Lastname</label>
+    <input type="text" id="lastname" name="lastname" />
+  </div>
+  <div class="col-4">
+    <label>Email</label>
+    <input type="email" id="email" name="email" />
+  </div>
+  <div class="col-4">
+    <label>Password</label>
+    <input type="password" id="password" name="password" />
+  </div>
+
+  <button
+    type="button"
+    onclick="registerUsers()"
+    class="btn btn-primary btn-sm"
+  >Registrarme</button>
+
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/src/public/js/socketio.js"></script>
+<script src="/js/socketio.js"></script>

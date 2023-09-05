@@ -21,10 +21,6 @@ const userSchema = new mongoose.Schema({
     enum: ["admin", "user", "visit"],
     default: "visit",
   },
-  salt: {
-    type: String,
-    require: true,
-  },
 });
 
 const userModel = mongoose.model("user", userSchema);

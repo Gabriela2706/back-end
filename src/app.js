@@ -16,6 +16,8 @@ import routerUser from "./routes/userViewsRoute.js";
 import MongoStore from "connect-mongo";
 import userModel from "./schemas/userSchema.js";
 import crypto from "crypto";
+import passport from "passport";
+import initLocalStrategy from "./config/passport.config.js";
 
 const app = express();
 const FS = sessionFs(session);
@@ -47,6 +49,10 @@ app.use(
     ttl: 3000,
   })
 );
+//-----------INICIALIZACION DE PASSPORT ----------------------------
+initLocalStrategy();
+app.use(passport.initialize());
+app.use(passport.session());
 
 //---------- ABREVIACION DE RUTAS PARA USO DE EXPRESS ---------------
 app.use("/api/cart", routerCart);
@@ -66,7 +72,7 @@ const appServer = app.listen(8082, () => {
 //envoltorio de socke io
 const io = new SocketServer(appServer);
 
-// conexion con el cliente
+// CONEXION CON EL CLIENTE SOCKET IO
 io.on("connection", async (SocketServer) => {
   console.log(`Cliente con id: ${SocketServer.id} se ha conectado`);
 

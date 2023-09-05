@@ -1,9 +1,8 @@
 //api/viewsUser/
 
 import { Router } from "express";
-import UserManager from "../db/dao/classUserManager.js";
 import ProductManager from "../db/dao/classProductManager.js";
-const userM = new UserManager();
+import passport from "passport";
 const routerUserViews = Router();
 const managerProd = new ProductManager();
 
@@ -11,31 +10,29 @@ const managerProd = new ProductManager();
 routerUserViews.get("/login", (req, res) => {
   res.render("login");
 });
-//OBTIENE EL LOGIN
-routerUserViews.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  const user = await userM.validateUser(username, password);
-  if (!user) return res.redirect("login");
-  delete user.password;
-  delete user.salt;
-
-  req.session.user = user;
-
-  res.redirect("profile");
-});
+//OBTIENE EL LOGIN (uso del passport-local)
+routerUserViews.post(
+  "/login",
+  passport.authenticate("login"),
+  async (req, res) => {
+    res.redirect("profile");
+  }
+);
 
 //MUESTRA EL FORMULARIO DE REGISTRO
 routerUserViews.get("/register", async (req, res) => {
   res.render(`register`);
 });
 
-//OBTIENE EL REGISTRO
-routerUserViews.post("/register", async (req, res) => {
-  const body = req.body;
-  const newUser = await userM.addUser(body);
-  if (!newUser) return "Faltan datos en el registro";
-  req.session.user = newUser;
-});
+//OBTIENE EL REGISTRO (uso del passport-local)
+routerUserViews.post(
+  "/register",
+  passport.authenticate("register", {
+    successMessage: "Usuario creado exitosamente!",
+    failureMessage: "No se pudo realizar el registro correctamente!",
+  }),
+  async (req, res) => {}
+);
 
 //VISTA DE PERFIL
 routerUserViews.get("/profile", async (req, res) => {
@@ -50,5 +47,23 @@ routerUserViews.get("/logout", (req, res) => {
     res.render(`logout`);
   });
 });
+
+//REDIRECCIONADOR LOGIN CON ESTRATEGIA DE GITHUB
+routerUserViews.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] }),
+  async (req, res) => {}
+);
+
+//CALLBACK LOGIN CON ESTRATEGIA DE GITHUB
+routerUserViews.get(
+  "/authgithub",
+  passport.authenticate("github", {
+    successMessage: "Inicio de sesion Exitoso con GitHub",
+    failureMessage: "Error de inicio",
+    successRedirect: "/profile",
+  }),
+  async (req, res) => {}
+);
 
 export default routerUserViews;

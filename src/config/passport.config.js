@@ -12,7 +12,7 @@ const initLocalStrategy = () => {
   passport.use(
     "register",
     new local.Strategy(
-      { passReqToCallback: true, passwordField: "email" },
+      { passReqToCallback: true, usernameField: "email" },
       async (req, email, password, next) => {
         const emailExist = await userM.userExist(email); //valido si existe el email a registrar
         if (emailExist) return false;
@@ -27,12 +27,12 @@ const initLocalStrategy = () => {
   passport.use(
     "login",
     new local.Strategy(
-      { passReqToCallback: true, passwordField: "email" },
-      async (email, password, next) => {
-        const login = userM.validateUser(email, password);
+      { passReqToCallback: true, usernameField: "email" },
+      async (req, email, password, next) => {
+        const login = await userM.validateUser(email, password);
         console.log(login);
         if (!login) return next("email y/o contraseña invalidos");
-        return next(null, login.toObject());
+        return next(null, login);
       }
     )
   );
@@ -49,15 +49,18 @@ const initLocalStrategy = () => {
       async (accessToken, refreshToken, profile, next) => {
         console.log(profile);
         const email = profile._json.email;
-        const user = userM.userExist(email);
+        const user = await userM.userExist(email);
 
         if (user) return next(null, user);
 
-        const createUser = userM.addUser({
+        const createUser = await userM.addUser({
           name: profile._json.name,
           lastName: profile._json.name,
           email,
           password: "",
+          role: (profile._json.email = "admincoder@coder.com"
+            ? "admin"
+            : "visit"),
         });
 
         next(null, createUser);

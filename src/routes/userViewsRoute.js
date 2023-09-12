@@ -29,17 +29,16 @@ routerUserViews.get("/register", async (req, res) => {
 routerUserViews.post(
   "/register",
   passport.authenticate("register", {
-    successMessage: "Usuario creado exitosamente!",
+    successRedirect: "/login",
     failureMessage: "No se pudo realizar el registro correctamente!",
   }),
   async (req, res) => {}
 );
 
 //VISTA DE PERFIL
-routerUserViews.get("/profile", JWTMw, async (req, res) => {
-  const { name, lastname } = req.session.user;
+routerUserViews.get("/profile", async (req, res) => {
   let products = await managerProd.getProducts();
-  res.render(`home`, { name, lastname, prod: products });
+  res.render(`home`, { prod: products });
 });
 
 //LOGOUT
@@ -62,7 +61,7 @@ routerUserViews.get(
   passport.authenticate("github", {
     successMessage: "Inicio de sesion Exitoso con GitHub",
     failureMessage: "Error de inicio",
-    successRedirect: "/profile",
+    successRedirect: "/api/viewsUser/profile",
   }),
   async (req, res) => {}
 );

@@ -8,14 +8,26 @@ export default class UserManager {
   getUser = async () => {};
 
   //AGREGAR USUARIOS NUEVOS
+
   addUser = async (user) => {
+    try {
+      //name, lastName, email, password, role
+      user.role = user.email == "admincoder@coder.com" ? "admin" : "visit";
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(user.password, salt);
+      const createUser = await userModel.create(user);
+
+      return createUser;
+    } catch (error) {
+      console.log(error.message);
+    }
     //name, lastName, email, password, role
-    //const salt = user.email == "admincoder@coder.com" ? "admin" : "visit";
+    user.role = user.email == "admincoder@coder.com" ? "admin" : "visit";
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
-    userModel.create(user);
+    const createUser = await userModel.create(user);
 
-    return user;
+    return createUser;
   };
   //VALIDAR EMAIL Y PASSWORD PARA INGRESAR
   validateUser = async (email, password) => {

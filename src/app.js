@@ -14,13 +14,12 @@ import session from "express-session";
 import sessionFs from "session-file-store";
 import routerUser from "./routes/userViewsRoute.js";
 import MongoStore from "connect-mongo";
-import userModel from "./schemas/userSchema.js";
-import crypto from "crypto";
 import passport from "passport";
 import initLocalStrategy from "./config/passport.config.js";
+import UserManager from "./db/dao/classUserManager.js";
 
 const app = express();
-const FS = sessionFs(session);
+const userManager = new UserManager();
 
 //conexion con moongose atlas
 const connMongoose = await mongoose.connect(
@@ -89,14 +88,7 @@ io.on("connection", async (SocketServer) => {
   SocketServer.on("registrarusuario", async (user) => {
     console.log(user);
 
-    user.role = user.email == "admincoder@coder.com" ? "admin" : "visit"; // Si el email es el "admin..." el role sera admin, si no, sera visit o cualquiera
-    user.salt = crypto.randomBytes(128).toString("base64");
-    user.password = crypto
-      .createHmac("sha256", user.salt)
-      .update(user.password)
-      .digest("hex");
-
-    await userModel.create(user);
+    await userManager.addUser(user);
 
     return user;
   });

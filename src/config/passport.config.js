@@ -17,8 +17,8 @@ const initLocalStrategy = () => {
         const emailExist = await userM.userExist(email); //valido si existe el email a registrar
         if (emailExist) return false;
 
-        const { body } = req.body;
-        const newUser = await userM.addUser({ body });
+        const body = req.body;
+        const newUser = await userM.addUser(body);
         return next(null, newUser.toObject());
       }
     )
@@ -69,7 +69,7 @@ const initLocalStrategy = () => {
   );
 
   passport.serializeUser((newUser, next) => {
-    next(null, newUser.email);
+    next(null, newUser._id);
   });
 
   passport.deserializeUser(async (id, next) => {

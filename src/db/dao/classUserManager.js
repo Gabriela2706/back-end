@@ -10,8 +10,8 @@ export default class UserManager {
   //AGREGAR USUARIOS NUEVOS
   addUser = async (user) => {
     //name, lastName, email, password, role
-    const salt = user.email == "admincoder@coder.com" ? "admin" : "visit";
-    user.salt = await bcrypt.genSalt(10);
+    //const salt = user.email == "admincoder@coder.com" ? "admin" : "visit";
+    const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     userModel.create(user);
 

@@ -3,6 +3,7 @@
 import { Router } from "express";
 import ProductManager from "../db/dao/classProductManager.js";
 import passport from "passport";
+import { JWTMw } from "../config/jwt.js";
 const routerUserViews = Router();
 const managerProd = new ProductManager();
 
@@ -35,7 +36,7 @@ routerUserViews.post(
 );
 
 //VISTA DE PERFIL
-routerUserViews.get("/profile", async (req, res) => {
+routerUserViews.get("/profile", JWTMw, async (req, res) => {
   const { name, lastname } = req.session.user;
   let products = await managerProd.getProducts();
   res.render(`home`, { name, lastname, prod: products });

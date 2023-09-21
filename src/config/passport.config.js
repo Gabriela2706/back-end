@@ -3,7 +3,7 @@
 import passport from "passport";
 import local from "passport-local";
 import UserManager from "../db/dao/classUserManager.js";
-import GithubStrategy from "passport-github2";
+//import GithubStrategy from "passport-github2";
 
 const userM = new UserManager();
 
@@ -36,45 +36,49 @@ const initLocalStrategy = () => {
       }
     )
   );
-  //ESTRATEGIA DE GITHUB
-  passport.use(
-    "github",
-    new GithubStrategy(
-      {
-        //primer llamada con los datos de la estrategia
-        clientID: "Iv1.dde9419804abf4e4",
-        clientSecret: "04a5adc86c0ded9893b9168123dde497bf58d5fb",
-        callbackURL: "http://localhost:8082/api/viewsUser/authgithub",
-      },
-      async (accessToken, refreshToken, profile, next) => {
-        console.log(profile);
-        const email = profile._json.email;
-        const user = await userM.userExist(email);
+  // //ESTRATEGIA DE GITHUB
+  // passport.use(
+  //   "github",
+  //   new GithubStrategy(
+  //     {
+  //       //primer llamada con los datos de la estrategia
+  //       clientID: "Iv1.dde9419804abf4e4",
+  //       clientSecret: "04a5adc86c0ded9893b9168123dde497bf58d5fb",
+  //       callbackURL: "http://localhost:8082/api/viewsUser/authgithub",
+  //     },
+  //     async (accessToken, refreshToken, profile, next) => {
+  //       console.log(profile);
+  //       const email = profile._json.email;
+  //       const user = await userM.userExist(email);
 
-        if (user) return next(null, user);
+  //       if (user) return next(null, user);
 
-        const createUser = await userM.addUser({
-          name: profile._json.name,
-          lastName: profile._json.name,
-          email,
-          password: "",
-          role: (profile._json.email = "admincoder@coder.com"
-            ? "admin"
-            : "visit"),
-        });
+  //       const createUser = await userM.addUser({
+  //         name: profile._json.name,
+  //         lastName: profile._json.name,
+  //         email,
+  //         password: "",
+  //         role: (profile._json.email = "admincoder@coder.com"
+  //           ? "admin"
+  //           : "visit"),
+  //       });
 
-        next(null, createUser);
-      }
-    )
-  );
+  //       next(null, createUser);
+  //     }
+  //   )
+  // );
 
   passport.serializeUser((newUser, next) => {
     next(null, newUser._id);
   });
 
   passport.deserializeUser(async (id, next) => {
-    const user = await userM.idExist(id);
-    next(null, user);
+    try {
+      const user = await userM.idExist(id);
+      next(null, user);
+    } catch (error) {
+      console.log(error.message);
+    }
   });
 };
 

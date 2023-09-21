@@ -1,3 +1,4 @@
+//./viewsProduct
 import { Router } from "express";
 import ProductManager from "../db/dao/classProductManager.js";
 import CartManager from "../db/dao/classCartManager.js";

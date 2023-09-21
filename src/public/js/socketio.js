@@ -34,18 +34,18 @@ function chat() {
 }
 
 //funcion guardar datos del registro
-function registerUsers() {
-  const name = document.getElementById("name").value;
-  const lastname = document.getElementById("lastname").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+// function registerUsers() {
+//   const name = document.getElementById("name").value;
+//   const lastname = document.getElementById("lastname").value;
+//   const email = document.getElementById("email").value;
+//   const password = document.getElementById("password").value;
 
-  const infoUsers = {
-    name,
-    lastname,
-    email,
-    password,
-  };
+//   const infoUsers = {
+//     name,
+//     lastname,
+//     email,
+//     password,
+//   };
 
-  socketCliente.emit("registrarusuario", infoUsers);
-}
+//   socketCliente.emit("registrarusuario", infoUsers);
+// }

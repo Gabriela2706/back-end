@@ -11,12 +11,13 @@ import routerViews from "./routes/productViewsRouter.js";
 import ChatModel from "./schemas/chatSchema.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import sessionFs from "session-file-store";
-import routerUser from "./routes/userViewsRoute.js";
+//import sessionFs from "session-file-store";
 import MongoStore from "connect-mongo";
 import passport from "passport";
 import initLocalStrategy from "./config/passport.config.js";
 import UserManager from "./db/dao/classUserManager.js";
+import routerUserViews from "./routes/userViewsRoute.js";
+import routerUsers from "./routes/userRoute.js";
 
 const app = express();
 const userManager = new UserManager();
@@ -54,11 +55,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //---------- ABREVIACION DE RUTAS PARA USO DE EXPRESS ---------------
-app.use("/api/cart", routerCart);
-app.use("/api/products", routerProducts);
-app.use("/api/views", routerViews); //ProductViewsRoute
-app.use("/api/viewsUser", routerUser); //UserViewsRoute
-app.use("/api/user", routerUser);
+app.use("/api/cart", routerCart); //API
+app.use("/api/products", routerProducts); //API
+app.use("/viewsProduct", routerViews); //Views
+app.use("/viewsUser", routerUserViews); //Views
+app.use("/api/user", routerUsers); //API
 
 //---------- CONTENIDO ESTATICO ---------------------------
 app.use(express.static(`${__dirname}/public`));

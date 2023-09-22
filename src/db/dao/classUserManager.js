@@ -7,6 +7,16 @@ export default class UserManager {
   //OBTENER TODOS LO USUARIOS
   getUser = async () => {};
 
+  //OBTENER USUARIO POR ID
+  getUserByID = async (id) => {
+    try {
+      const idUser = await userModel.findById(id);
+      return idUser;
+    } catch (error) {
+      console.log(e.message);
+    }
+  };
+
   //AGREGAR USUARIOS NUEVOS
 
   addUser = async (user) => {

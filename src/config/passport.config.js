@@ -1,9 +1,11 @@
-//configuracion de passport estrategia local
-
+//configuracion de passport estrategis
 import passport from "passport";
 import local from "passport-local";
 import UserManager from "../db/dao/classUserManager.js";
 //import GithubStrategy from "passport-github2";
+import jwt from "passport-jwt";
+import { tokenCookie } from "../utils/jwtCookie.js";
+import { SECRET } from "./jwt.js";
 
 const userM = new UserManager();
 
@@ -68,13 +70,29 @@ const initLocalStrategy = () => {
   //   )
   // );
 
+  passport.use(
+    //ESTRATEGIA DE JWT
+    "current",
+    new jwt.Strategy(
+      {
+        jwtFromRequest: jwt.ExtractJwt.fromExtractors([tokenCookie]), //extraigo el token de las cookies
+        secretOrKey: SECRET,
+      },
+      async (payload, next) => {
+        console.log(payload);
+        const userSub = await userM.getUserByID(payload.sub);
+        if (!userSub) return next("Payload.sub no encontrado");
+        return next(null, userSub);
+      }
+    )
+  );
   passport.serializeUser((newUser, next) => {
     next(null, newUser._id);
   });
 
   passport.deserializeUser(async (id, next) => {
     try {
-      const user = await userM.idExist(id);
+      const user = await userM.getUserByID(id);
       next(null, user);
     } catch (error) {
       console.log(error.message);
